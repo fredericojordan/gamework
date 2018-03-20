@@ -4,7 +4,7 @@ from pygame.locals import *
 from random import randint, choice
 from utils import load_image, rot_center
 
-GRASS_SPEED = 0.715
+GRASS_SPEED = 2
 GRASS_GREEN = 75
 CENTER_X = -1
 CENTER_Y = -1
@@ -38,10 +38,10 @@ class Player(pygame.sprite.Sprite):
         self.x, self.y = findspawn()
         self.dir = 0
         self.speed = 0.0
-        self.maxspeed = 11.5
+        self.maxspeed = 13
         self.minspeed = -1.85
-        self.acceleration = 0.095
-        self.deacceleration = 0.12
+        self.acceleration = 0.1
+        self.deacceleration = 0.1
         self.softening = 0.04
         self.steering = 1.60
         self.tracks = False
@@ -89,10 +89,11 @@ class Player(pygame.sprite.Sprite):
             if self.speed < self.maxspeed / 3:
                 self.emit_tracks()
 
-    def deaccelerate(self):
+    def deaccelerate(self, factor=1):
         """Deaccelerate."""
-        if self.speed > self.minspeed:
-            self.speed = self.speed - self.deacceleration
+        if self.speed > 0:
+            self.speed = self.speed - self.deacceleration*factor
+            self.speed = max(self.speed, 0)
             self.emit_tracks()
 
     def steerleft(self):
@@ -121,3 +122,11 @@ class Player(pygame.sprite.Sprite):
         self.image = load_image('player_{}.png'.format(self.image_n))
         self.image_orig = self.image
         self.image, self.rect = rot_center(self.image_orig, self.rect, self.dir)
+
+    def pull_handbrake(self):
+        self.deaccelerate(2)
+        self.steering += 0.5
+        self.steering = min(self.steering, 5)
+                
+    def release_handbrake(self):
+        self.steering = 1.60

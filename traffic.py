@@ -1,7 +1,7 @@
 """Traffic module."""
 import pygame, os, sys, math, maps
 from pygame.locals import *
-from random import randint
+from random import choice, randint
 from utils import load_image, rot_center
 
 
@@ -14,8 +14,8 @@ CENTER_H = -1
 HALF_TILE = 500
 
 cars = []
-car_files = ['traffic1.png', 'traffic2.png', 'traffic3.png',
-             'traffic4.png', 'traffic5.png']
+car_files = ['player_1.png', 'player_2.png', 'player_3.png',
+             'player_4.png', 'player_5.png']
 
 
 def initialize(center_w, center_h):
@@ -75,7 +75,7 @@ class Traffic(pygame.sprite.Sprite):
     def __init__(self):
         """Initialize the object."""
         pygame.sprite.Sprite.__init__(self)
-        self.image = cars[randint(0, len(cars))-1] 
+        self.image = choice(cars) 
         self.rect = self.image.get_rect()
         self.image_orig = self.image
         self.screen = pygame.display.get_surface()
@@ -86,8 +86,13 @@ class Traffic(pygame.sprite.Sprite):
         self.dir = 0
         self.turning()
         self.rotate()
-        self.speed = randint(60, 145) / 100
+        self.speed = randint(60, 180) / 100
         self.turning_cooldown = 0
+        
+    def impact(self, direction, speed):
+        """Push back on impact"""
+        self.dir = direction
+        self.speed = 0.8*speed
 
     def update(self, cam_x, cam_y):
         """Update the position.
@@ -103,6 +108,6 @@ class Traffic(pygame.sprite.Sprite):
             if (self.x % 1000 > BOUND_MIN and self.x % 1000 < BOUND_MAX):
                 if (self.y % 1000 > BOUND_MIN and self.y % 1000 < BOUND_MAX):
                         self.turning()
-                        self.rotate()   
+                        self.rotate()
 
         self.rect.topleft = self.x - cam_x, self.y - cam_y

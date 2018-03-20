@@ -20,4 +20,4 @@ class Alert(pygame.sprite.Sprite):
         self.x =  int(pygame.display.Info().current_w /2) - NOTE_HALF_X
         self.y =  int(pygame.display.Info().current_h /2) - NOTE_HALF_Y
         self.rect.topleft = self.x, self.y
-        self.visibility = True
+        self.visibility = False

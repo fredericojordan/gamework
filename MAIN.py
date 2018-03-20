@@ -83,6 +83,8 @@ def main():
                     sys.exit(0)
                 if (keys[K_c]):
                     car.change_sprite()
+                if keys[K_SPACE]:
+                    car.release_handbrake()
 
             if event.type == pygame.KEYDOWN and event.key == pygame.K_ESCAPE:
                 running = False
@@ -101,6 +103,8 @@ def main():
                 car.soften()
             if keys[K_DOWN]:
                 car.deaccelerate()
+            if keys[K_SPACE]:
+                car.pull_handbrake()
 
         cam.set_pos(car.x, car.y)
 
@@ -145,7 +149,7 @@ def main():
         if (bounds.breaking(car.x+CENTER_W, car.y+CENTER_H) == True):
             bound_alert_s.update()
             bound_alert_s.draw(screen)
-        if (target.timeleft == 0):
+        if False:  # (target.timeleft == 0):
             timer_alert_s.draw(screen)
             car.speed = 0
             text_score = font.render('Final Score: ' + str(target.score), 1, (224, 16, 16))
@@ -160,7 +164,11 @@ def main():
         pygame.display.flip()
 
         # Check collision!!!
-        if pygame.sprite.spritecollide(car, traffic_s, False):
+        collided_cars = pygame.sprite.spritecollide(car, traffic_s, False)
+        if collided_cars:
+            if car.speed > 0:
+                for traffic_car in collided_cars:
+                    traffic_car.impact(car.dir, car.speed)
             car.impact()
             target.car_crash()
 
