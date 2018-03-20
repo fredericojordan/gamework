@@ -25,7 +25,7 @@
 #Player module, the car.
 import os, sys, pygame, math, maps
 from pygame.locals import *
-from random import randint
+from random import randint, choice
 from loader import load_image
 
 GRASS_SPEED = 0.715
@@ -52,7 +52,8 @@ def findspawn():
 class Player(pygame.sprite.Sprite):
     def __init__(self):
         pygame.sprite.Sprite.__init__(self)
-        self.image = load_image('car_player.png')
+        self.image_n = randint(1,5)
+        self.image = load_image('player_{}.png'.format(self.image_n))
         self.rect = self.image.get_rect()
         self.image_orig = self.image
         self.screen = pygame.display.get_surface()
@@ -144,8 +145,13 @@ class Player(pygame.sprite.Sprite):
         self.x = self.x + self.speed * math.cos(math.radians(270-self.dir))
         self.y = self.y + self.speed * math.sin(math.radians(270-self.dir))
         self.reset_tracks()
+    
+    def change_sprite(self):
+        self.image_n = choice([i for i in range(1,5) if not i == self.image_n])
+        self.image = load_image('player_{}.png'.format(self.image_n))
+        self.image_orig = self.image
+        self.image, self.rect = rot_center(self.image_orig, self.rect, self.dir)
         
-
 
 
 

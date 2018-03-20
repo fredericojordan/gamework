@@ -103,6 +103,8 @@ def main():
                 if (keys[K_q]):
                     pygame.quit()
                     sys.exit(0)
+                if (keys[K_c]):
+                    car.change_sprite()
 
             if event.type == pygame.KEYDOWN and event.key == pygame.K_ESCAPE:
                 running = False
