@@ -2,7 +2,7 @@ import os, sys, pygame, random, array, gamemode
 import direction,  bounds, timeout, menu
 from pygame.locals import *
 
-from loader import load_image
+from utils import load_image
 import player, maps, traffic, camera, tracks
 
 

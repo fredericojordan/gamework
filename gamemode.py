@@ -1,7 +1,7 @@
 """The gamemode is defined in this module."""
 import pygame, maps
 from pygame.locals import *
-from loader import load_image
+from utils import load_image
 from random import randint
 
 PENALTY_COOL = 180

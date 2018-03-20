@@ -1,7 +1,7 @@
 """Map file."""
 import os, sys, pygame, math
 from pygame.locals import *
-from loader import load_image
+from utils import load_image
 from random import randrange
 
 #Map filenames.

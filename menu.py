@@ -1,5 +1,5 @@
 """Menu and game description."""
-from loader import load_image
+from utils import load_image
 import pygame
 from pygame.locals import *
 

@@ -1,5 +1,5 @@
 """Alert shown when the car is outside the map."""
-from loader import load_image
+from utils import load_image
 import pygame
 from pygame.locals import *
 

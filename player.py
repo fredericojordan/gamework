@@ -2,19 +2,13 @@
 import os, sys, pygame, math, maps
 from pygame.locals import *
 from random import randint, choice
-from loader import load_image
+from utils import load_image, rot_center
 
 GRASS_SPEED = 0.715
 GRASS_GREEN = 75
 CENTER_X = -1
 CENTER_Y = -1
 
-
-def rot_center(image, rect, angle):
-        """rotate an image while keeping its center"""
-        rot_image = pygame.transform.rotate(image, angle)
-        rot_rect = rot_image.get_rect(center=rect.center)
-        return rot_image,rot_rect
 
 def findspawn():
     x = randint(0,9)

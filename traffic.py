@@ -2,7 +2,8 @@
 import pygame, os, sys, math, maps
 from pygame.locals import *
 from random import randint
-from loader import load_image
+from utils import load_image, rot_center
+
 
 BOUND_MIN = 380
 BOUND_MAX = 620
@@ -16,11 +17,6 @@ cars = []
 car_files = ['traffic1.png', 'traffic2.png', 'traffic3.png',
              'traffic4.png', 'traffic5.png']
 
-def rot_center(image, rect, angle):
-        """rotate an image while keeping its center"""
-        rot_image = pygame.transform.rotate(image, angle)
-        rot_rect = rot_image.get_rect(center=rect.center)
-        return rot_image,rot_rect
 
 def initialize(center_w, center_h):
     """Initialize cars."""
