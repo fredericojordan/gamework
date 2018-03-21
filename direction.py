@@ -3,7 +3,7 @@ import pygame, math
 from pygame.locals import *
 from utils import load_image, rot_center
 
-PI = 3.14
+PI = 3.14159265359
 
 class Tracker(pygame.sprite.Sprite):
     """Guide the player with a giant arrow."""

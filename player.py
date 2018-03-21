@@ -6,6 +6,7 @@ from utils import load_image, rot_center
 
 GRASS_SPEED = 2
 GRASS_GREEN = 75
+MIN_COLOR_SUM = 300
 CENTER_X = -1
 CENTER_Y = -1
 
@@ -64,9 +65,10 @@ class Player(pygame.sprite.Sprite):
         """Don't emit tracks.."""
         self.tracks = False
 
-    def grass(self, value):
+    def grass(self, rgb):
         """If the car is on grass, decrease speed and emit tracks."""
-        if value > GRASS_GREEN:
+        color_sum = rgb.r + rgb.g + rgb.b
+        if color_sum > MIN_COLOR_SUM:
             if self.speed - self.deacceleration > GRASS_SPEED * 2:
                 self.speed = self.speed - self.deacceleration * 2
                 self.emit_tracks()

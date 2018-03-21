@@ -125,7 +125,7 @@ def main():
         map_s.draw(screen)
         
         # Conditional renders/effects
-        car.grass(screen.get_at(((int(CENTER_W-5), int(CENTER_H-5)))).g)
+        car.grass(screen.get_at(((int(CENTER_W-5), int(CENTER_H-5)))))
         if (car.tracks):
             tracks_s.add(tracks.Track(cam.x + CENTER_W, cam.y + CENTER_H, car.dir))
 
