@@ -1,6 +1,7 @@
 """General utility functions"""
-import os, sys, pygame
-from pygame.locals import *
+import os
+import pygame
+from pygame.locals import RLEACCEL
 
 
 def load_image(file, transparent = True):

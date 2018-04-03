@@ -1,23 +1,18 @@
 """Player module, the car."""
-import os, sys, pygame, math, maps
-from pygame.locals import *
-from random import randint, choice
+import math
+import pygame
+from random import choice
+
+import maps
 from utils import load_image, rot_center
 
-GRASS_SPEED = 2
-GRASS_GREEN = 75
-MIN_COLOR_SUM = 300
-CENTER_X = -1
-CENTER_Y = -1
+OUT_OF_BOUNDS_SPEED = 2
+INIT_X = choice(maps.LANE_X)
+INIT_Y = -200
 
 
 def findspawn():
-    x = randint(0,9)
-    y = randint(0,9)
-    while(maps.map_1[y][x] == 5):
-            x = randint(0,9)
-            y = randint(0,9)
-    return x * 1000 + CENTER_X, y * 1000 + CENTER_Y
+    return INIT_X, INIT_Y
 
 
 class Player(pygame.sprite.Sprite):
@@ -25,17 +20,13 @@ class Player(pygame.sprite.Sprite):
     
     def __init__(self):
         pygame.sprite.Sprite.__init__(self)
-        self.image_n = randint(1,5)
+        self.image_n = 1
         self.image = load_image('player_{}.png'.format(self.image_n))
         self.rect = self.image.get_rect()
         self.image_orig = self.image
         self.screen = pygame.display.get_surface()
         self.area = self.screen.get_rect()
-        CENTER_X =  int(pygame.display.Info().current_w /2)
-        CENTER_Y =  int(pygame.display.Info().current_h /2)
-        self.x = CENTER_X
-        self.y = CENTER_Y
-        self.rect.topleft = self.x, self.y
+        self.rect.topleft = int(pygame.display.Info().current_w /2), int(pygame.display.Info().current_h /2)
         self.x, self.y = findspawn()
         self.dir = 0
         self.speed = 0.0
@@ -64,12 +55,16 @@ class Player(pygame.sprite.Sprite):
     def reset_tracks(self):
         """Don't emit tracks.."""
         self.tracks = False
+        
+    def is_out_of_bounds(self):
+        return self.x < maps.OUT_OF_BOUNDS_X_LIMITS[0] or \
+            self.x > maps.OUT_OF_BOUNDS_X_LIMITS[1] or \
+            (self.x > maps.GRASS_X_LIMITS[0] and self.x < maps.GRASS_X_LIMITS[1])
 
-    def grass(self, rgb):
-        """If the car is on grass, decrease speed and emit tracks."""
-        color_sum = rgb.r + rgb.g + rgb.b
-        if color_sum > MIN_COLOR_SUM:
-            if self.speed - self.deacceleration > GRASS_SPEED * 2:
+    def out_of_bounds(self):
+        """If the car is on out_of_bounds, decrease speed and emit tracks."""
+        if self.is_out_of_bounds():
+            if self.speed - self.deacceleration > OUT_OF_BOUNDS_SPEED * 2:
                 self.speed = self.speed - self.deacceleration * 2
                 self.emit_tracks()
 
@@ -91,8 +86,8 @@ class Player(pygame.sprite.Sprite):
             if self.speed < self.maxspeed / 3:
                 self.emit_tracks()
 
-    def deaccelerate(self, factor=1):
-        """Deaccelerate."""
+    def decelerate(self, factor=1):
+        """Decelerate."""
         if self.speed > 0:
             self.speed = self.speed - self.deacceleration*factor
             self.speed = max(self.speed, 0)
@@ -114,10 +109,11 @@ class Player(pygame.sprite.Sprite):
             self.emit_tracks()   
         self.image, self.rect = rot_center(self.image_orig, self.rect, self.dir)
 
-    def update(self, last_x, last_y):  # FIXME
+    def update(self):
         self.x = self.x + self.speed * math.cos(math.radians(270-self.dir))
         self.y = self.y + self.speed * math.sin(math.radians(270-self.dir))
         self.reset_tracks()
+        self.out_of_bounds()
     
     def change_sprite(self):
         self.image_n = choice([i for i in range(1,5) if not i == self.image_n])
@@ -126,9 +122,12 @@ class Player(pygame.sprite.Sprite):
         self.image, self.rect = rot_center(self.image_orig, self.rect, self.dir)
 
     def pull_handbrake(self):
-        self.deaccelerate(2)
+        self.decelerate(2)
         self.steering += 0.5
         self.steering = min(self.steering, 5)
                 
     def release_handbrake(self):
         self.steering = 1.60
+        
+    def get_progress(self):
+        return -(self.y-INIT_Y)/10

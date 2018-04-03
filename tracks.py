@@ -1,26 +1,25 @@
 """The car will emit tracks."""
-import os, sys, pygame
-from pygame.locals import *
+import pygame
+
 from utils import load_image, rot_center
 
 LIFETIME = 300
+DISPLACEMENT = [3, 20]
 
 
 def initialize():
-    """Initialize, load the tracks image."""
-    global tracks_img
-    tracks_img = load_image('tracks.png', False)
+    global TRACK_IMAGE
+    TRACK_IMAGE = load_image('tracks.png', False)
 
 
 class Track(pygame.sprite.Sprite):
     """Track sprite class."""
     def __init__(self, car_x, car_y, angle):
         pygame.sprite.Sprite.__init__(self)
-        self.image, self.rect = rot_center(tracks_img, tracks_img.get_rect(), angle)
+        self.image, self.rect = rot_center(TRACK_IMAGE, TRACK_IMAGE.get_rect(), angle)
         self.lifetime = LIFETIME
-        self.screen = pygame.display.get_surface()
-        self.x = car_x  + 3 
-        self.y = car_y  + 20
+        self.x = car_x  + DISPLACEMENT[0] + int(pygame.display.Info().current_w/2)
+        self.y = car_y  + DISPLACEMENT[1] + int(pygame.display.Info().current_h/2)
         self.rect.topleft = self.x, self.y
 
     def update(self, cam_x, cam_y):
